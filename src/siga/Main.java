@@ -1,49 +1,42 @@
 package siga;
 
-public class Main {
+import java.util.Locale;
 
-    public static void main(String[] args) {
-        System.out.println("=== SIGA - Aula 12: Strategy e Observer (codigo inicial) ===");
+public class Main {
+    public static void main(String[] argumentos) {
+        Locale.setDefault(Locale.forLanguageTag("pt-BR"));
+        System.out.println("=== SIGA - Aula 12: Strategy e Observer ===");
 
         Aluno bolsista = new Aluno("2024001", "Maria Silva");
         bolsista.setBolsista(true);
-
+        Aluno servidor = new Aluno("2024002", "Joao Souza");
+        servidor.setServidor(true);
         Aluno egresso = new Aluno("2024003", "Ana Pereira");
         egresso.setEgresso(true);
+        Aluno regular = new Aluno("2024004", "Pedro Santos");
 
-        double valorBase = 800.00;
+        PublicadorMatricula publicador = new PublicadorMatricula();
+        publicador.registrar(new NotificadorEmail());
+        publicador.registrar(new PainelVagas());
+        publicador.registrar(new AvisoCoordenacao());
+        publicador.registrar(new RegistroAuditoria());
+        publicador.registrar(new EstatisticaOcupacao());
+        FachadaMatricula fachada = new FachadaMatricula(publicador);
         GeradorBoleto gerador = new GeradorBoleto();
+        double valorBase = 800.00;
 
-        System.out.println();
-        System.out.println("1) Desconto calculado em DOIS lugares diferentes");
-        for (Aluno a : new Aluno[] { bolsista, egresso }) {
-            Matricula m = new Matricula(a, "DSM-2A");
-            System.out.printf("   %-14s matricula: R$ %.2f%n",
-                    a.getNome(), m.calcularValor(valorBase));
-            gerador.emitir(a, valorBase);
-        }
-        System.out.println("   >> DESLIZE 1: Ana Pereira paga R$ 720,00 na matricula");
-        System.out.println("      e R$ 800,00 no boleto. A mesma cadeia de condicionais");
-        System.out.println("      existe nas duas classes, e o desconto de egresso");
-        System.out.println("      nunca chegou ao gerador de boletos.");
+        demonstrar(fachada, gerador, bolsista, new DescontoBolsista(), false, valorBase);
+        demonstrar(fachada, gerador, servidor, new DescontoServidor(), false, valorBase);
+        demonstrar(fachada, gerador, egresso, new DescontoEgresso(), true, valorBase);
+        demonstrar(fachada, gerador, regular, new SemDesconto(), false, valorBase);
+        System.out.printf("%nMatriculas registradas: %d%n", fachada.listar().size());
+    }
 
-        System.out.println();
-        System.out.println("2) Reacoes a matricula, todas dentro da fachada");
-        FachadaMatricula fachada = new FachadaMatricula();
-        fachada.matricular(bolsista, "DSM-2A", false);
-
-        System.out.println();
-        System.out.println("   Agora com a turma lotada, e o aviso a coordenacao falhando:");
-        try {
-            fachada.matricular(egresso, "DSM-2B", true);
-        } catch (IllegalStateException e) {
-            System.out.println("   [erro] " + e.getMessage());
-        }
-        System.out.println("   >> DESLIZE 2: a falha de UMA reacao impediu a auditoria,");
-        System.out.println("      que vinha depois dela. E a quinta reacao sera a quinta");
-        System.out.println("      alteracao nesta mesma classe.");
-
-        System.out.println();
-        System.out.println("Sua tarefa: ver o README.md e a ficha de atividade pratica.");
+    private static void demonstrar(FachadaMatricula fachada, GeradorBoleto gerador,
+            Aluno aluno, PoliticaDesconto politica, boolean turmaLotada, double valorBase) {
+        System.out.printf("%n%s - %s%n", aluno.getNome(), politica.getDescricao());
+        Matricula matricula = fachada.matricular(aluno, "DSM-2A", turmaLotada, politica);
+        System.out.printf("   [matricula] R$ %.2f%n", matricula.calcularValor(valorBase));
+        gerador.emitir(matricula, valorBase);
     }
 }

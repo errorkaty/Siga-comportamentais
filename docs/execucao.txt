@@ -1,0 +1,36 @@
+=== SIGA - Aula 12: Strategy e Observer ===
+
+Maria Silva - Bolsista
+   [e-mail] confirmacao para Maria Silva
+   [painel] vagas de DSM-2A atualizadas
+   [auditoria] MATRICULA - 2024001
+   [estatistica] DSM-2A: 1 matricula(s)
+   [matricula] R$ 400,00
+   [boleto] Maria Silva: R$ 400,00
+
+Joao Souza - Servidor
+   [e-mail] confirmacao para Joao Souza
+   [painel] vagas de DSM-2A atualizadas
+   [auditoria] MATRICULA - 2024002
+   [estatistica] DSM-2A: 2 matricula(s)
+   [matricula] R$ 640,00
+   [boleto] Joao Souza: R$ 640,00
+
+Ana Pereira - Egresso
+   [e-mail] confirmacao para Ana Pereira
+   [painel] vagas de DSM-2A atualizadas
+   [erro] AvisoCoordenacao: servico de aviso indisponivel para DSM-2A
+   [auditoria] MATRICULA - 2024003
+   [estatistica] DSM-2A: 3 matricula(s)
+   [matricula] R$ 720,00
+   [boleto] Ana Pereira: R$ 720,00
+
+Pedro Santos - Sem desconto
+   [e-mail] confirmacao para Pedro Santos
+   [painel] vagas de DSM-2A atualizadas
+   [auditoria] MATRICULA - 2024004
+   [estatistica] DSM-2A: 4 matricula(s)
+   [matricula] R$ 800,00
+   [boleto] Pedro Santos: R$ 800,00
+
+Matriculas registradas: 4

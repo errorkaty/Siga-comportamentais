@@ -1,13 +1,18 @@
 package siga;
 
-public class Matricula {
+import java.util.Objects;
 
+public class Matricula {
     private final Aluno aluno;
     private final String codigoTurma;
+    private final boolean turmaLotada;
+    private final PoliticaDesconto politica;
 
-    public Matricula(Aluno aluno, String codigoTurma) {
-        this.aluno = aluno;
-        this.codigoTurma = codigoTurma;
+    public Matricula(Aluno aluno, String codigoTurma, boolean turmaLotada, PoliticaDesconto politica) {
+        this.aluno = Objects.requireNonNull(aluno);
+        this.codigoTurma = Objects.requireNonNull(codigoTurma);
+        this.turmaLotada = turmaLotada;
+        this.politica = Objects.requireNonNull(politica);
     }
 
     public Aluno getAluno() {
@@ -18,15 +23,16 @@ public class Matricula {
         return codigoTurma;
     }
 
+    public boolean isTurmaLotada() {
+        return turmaLotada;
+    }
+
+    public PoliticaDesconto getPolitica() {
+        return politica;
+    }
+
     public double calcularValor(double valorBase) {
-        if (aluno.isBolsista()) {
-            return valorBase * 0.50;
-        } else if (aluno.isServidor()) {
-            return valorBase * 0.80;
-        } else if (aluno.isEgresso()) {
-            return valorBase * 0.90;
-        }
-        return valorBase;
+        return politica.aplicar(valorBase);
     }
 
     @Override

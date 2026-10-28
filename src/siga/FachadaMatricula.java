@@ -2,27 +2,25 @@ package siga;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FachadaMatricula {
-
     private final List<Matricula> armazem = new ArrayList<>();
+    private final PublicadorMatricula publicador;
 
-    private final NotificadorEmail notificadorEmail = new NotificadorEmail();
-    private final PainelVagas painelVagas = new PainelVagas();
-    private final RegistroAuditoria registroAuditoria = new RegistroAuditoria();
-    private final AvisoCoordenacao avisoCoordenacao = new AvisoCoordenacao();
+    public FachadaMatricula(PublicadorMatricula publicador) {
+        this.publicador = Objects.requireNonNull(publicador);
+    }
 
-    public Matricula matricular(Aluno aluno, String codigoTurma, boolean turmaLotada) {
-        Matricula nova = new Matricula(aluno, codigoTurma);
-        armazem.add(nova);
-
-        notificadorEmail.enviarConfirmacao(nova);
-        painelVagas.atualizar(codigoTurma);
-        if (turmaLotada) {
-            avisoCoordenacao.enviar(codigoTurma);
+    public Matricula matricular(Aluno aluno, String codigoTurma, boolean turmaLotada,
+            PoliticaDesconto politica) {
+        Objects.requireNonNull(codigoTurma);
+        if (codigoTurma.isBlank()) {
+            throw new IllegalArgumentException("O codigo da turma deve ser informado.");
         }
-        registroAuditoria.registrar("MATRICULA", aluno.getMatricula());
-
+        Matricula nova = new Matricula(aluno, codigoTurma, turmaLotada, politica);
+        armazem.add(nova);
+        publicador.publicar(nova);
         return nova;
     }
 
